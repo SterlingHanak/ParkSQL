@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Capstone.DAL;
+using Capstone.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -72,14 +74,20 @@ namespace Capstone
         private void GetAllParks()
         {
             ParkSqlDAL dal = new ParkSqlDAL(DatabaseConnection);
-            List<Park> parks = dal.GetParks();
+            List<Park> parks = dal.SeeParks();
 
             if (parks.Count > 0)
             {
-                parks.ForEach(park =>
+                foreach(Park park in parks)
                 {
-                    Console.WriteLine(park);
-                });
+                    Console.WriteLine("Park ID".PadRight(10) + "Name".PadRight(20) + "Location".PadRight(15) + "Establish Date".PadRight(20) + "Area".PadRight(10) + "Visitors");
+                    Console.WriteLine("");
+                    Console.WriteLine(park.ParkId.ToString().PadRight(10) + park.Name.PadRight(20) + park.Location.PadRight(15) + park.EstablishDate.ToString("MMMM dd, yyyy").PadRight(20) + park.Area.ToString("N0").PadRight(10) + park.Visitors.ToString("N0"));
+                    Console.WriteLine();
+                    Console.WriteLine("Description: " + park.Description);
+                    Console.WriteLine("");
+
+                }
             }
             else
             {
@@ -90,6 +98,31 @@ namespace Capstone
         private void ViewParkCampgrounds()
         {
             ParkSqlDAL dal = new ParkSqlDAL(DatabaseConnection);
+            List<Park> parks = dal.SeeParks();
+            Console.WriteLine("Which park would you like to choose?");
+            if (parks.Count > 0)
+            {
+                for(int i = 0; i < parks.Count; i++)
+                {
+                    Console.WriteLine((i + 1).ToString().PadRight(10) + parks[i].Name);
+                }
+            }
+            int parsedUserInput = 0;
+            
+            while(parsedUserInput == 0 || parsedUserInput > parks.Count)
+            {
+                string userInput = Console.ReadLine();
+                Int32.TryParse(userInput, out parsedUserInput);
+                if(parsedUserInput == 0 || parsedUserInput > parks.Count)
+                {
+                    Console.WriteLine("Please enter a valid number");
+                }
+            }
+            
+            Park userPark = parks[parsedUserInput - 1];
+            SubCLIOne submenu = new SubCLIOne();
+
+            submenu.Display(userPark);
         }
 
 
