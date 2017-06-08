@@ -21,5 +21,10 @@ namespace Capstone.DAL
         {
             throw new NotImplementedException();
         }
+
+        public bool IsAvailable()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
