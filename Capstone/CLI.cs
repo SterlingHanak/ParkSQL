@@ -68,6 +68,7 @@ namespace Capstone
             Console.WriteLine("Main Menu Please type in a command");
             Console.WriteLine(" 1 - Show all parks");
             Console.WriteLine(" 2 - Choose a park and view all campgrounds");
+            
 
         }
 
