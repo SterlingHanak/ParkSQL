@@ -113,7 +113,7 @@ namespace Capstone.DAL
         }
 
 
-        public List<int> IsReservationOpen(DateTime startDate, DateTime endDate)
+        public List<int> IsReservationOpen(DateTime startDate, DateTime endDate, List<Reservation> allReservations, List<int> numberOfSites)
         {
             
             foreach(Reservation party in allReservations)
@@ -128,15 +128,12 @@ namespace Capstone.DAL
 
         public bool CreateReservation(Reservation newReservation)
         {
-            bool isAvailable = IsReservationOpen(newReservation.From_Date, newReservation.To_Date);
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
 
-                    if (isAvailable)
-                    {
                         SqlCommand cmd = new SqlCommand(SQL_CreateReservation, conn);
                         cmd.Parameters.AddWithValue("@site_id", newReservation.SiteId);
                         cmd.Parameters.AddWithValue("@name", newReservation.Name);
@@ -146,7 +143,6 @@ namespace Capstone.DAL
 
                         int rowsAffected = cmd.ExecuteNonQuery();
                         return (rowsAffected > 0);
-                    }
                 }
             }
             catch (SqlException ex)
@@ -154,9 +150,8 @@ namespace Capstone.DAL
                 Console.WriteLine(ex.Message);
                 throw;
             }
-            return false;
         }
-        
+
 
         public Reservation PopulateReservationObject(SqlDataReader reader)
         {
