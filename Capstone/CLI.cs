@@ -1,4 +1,5 @@
 ﻿using Capstone.DAL;
+using Capstone.Interfaces;
 using Capstone.Models;
 using System;
 using System.Collections.Generic;
@@ -36,10 +37,8 @@ namespace Capstone
                         ViewParkCampgrounds();
                         break;
 
-
                     case Command_Quit:
-                        { 
-}
+
                         Console.WriteLine("Thank you for using the project organizer");
                         return;
 
@@ -68,13 +67,14 @@ namespace Capstone
             Console.WriteLine("Main Menu Please type in a command");
             Console.WriteLine(" 1 - Show all parks");
             Console.WriteLine(" 2 - Choose a park and view all campgrounds");
+            Console.WriteLine(" Q - Quit program");
             
 
         }
 
         private void GetAllParks()
         {
-            ParkSqlDAL dal = new ParkSqlDAL(DatabaseConnection);
+            IParkDAL dal = new ParkSqlDAL(DatabaseConnection);
             List<Park> parks = dal.SeeParks();
 
             if (parks.Count > 0)
@@ -110,11 +110,11 @@ namespace Capstone
             }
             int parsedUserInput = 0;
             
-            while(parsedUserInput == 0 || parsedUserInput > parks.Count)
+            while(parsedUserInput <= 0 || parsedUserInput > parks.Count)
             {
                 string userInput = Console.ReadLine();
                 Int32.TryParse(userInput, out parsedUserInput);
-                if(parsedUserInput == 0 || parsedUserInput > parks.Count)
+                if(parsedUserInput <= 0 || parsedUserInput > parks.Count)
                 {
                     Console.WriteLine("Please enter a valid number");
                 }

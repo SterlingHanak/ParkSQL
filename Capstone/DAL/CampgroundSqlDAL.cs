@@ -1,4 +1,5 @@
-﻿using Capstone.Models;
+﻿using Capstone.Interfaces;
+using Capstone.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Capstone.DAL
 {
-    class CampgroundSqlDAL
+    class CampgroundSqlDAL : ICampgroundDAL
     {
         private string connectionString;
         private const string SQL_GetAllCampgrounds = @"SELECT * FROM campground WHERE park_id = @park_id";

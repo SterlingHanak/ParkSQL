@@ -1,4 +1,5 @@
-﻿using Capstone.Models;
+﻿using Capstone.Interfaces;
+using Capstone.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Capstone.DAL
 {
-    class ReservationSqlDAL
+    class ReservationSqlDAL : IReservationDAL
     {
         private string connectionString;
         private const string SQL_IsCampgroundOpen = @"SELECT * FROM campground WHERE campground_id = @campground_id";
@@ -50,37 +51,37 @@ namespace Capstone.DAL
             return false;
         }
 
-        public List<Site> GetAvailableSites(Site campsite, DateTime startDate, DateTime endDate)
-        {
-            List<Site> availableSites = new List<Site>();
+        //public List<Site> GetAvailableSites(Site campsite, DateTime startDate, DateTime endDate)
+        //{
+        //    List<Site> availableSites = new List<Site>();
 
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
+        //    try
+        //    {
+        //        using (SqlConnection conn = new SqlConnection(connectionString))
+        //        {
+        //            conn.Open();
 
-                    SqlCommand cmd = new SqlCommand(SQL_GetAvailableSites, conn);
-                    cmd.Parameters.AddWithValue("@campground_id", campsite.CampgroundId);
+        //            SqlCommand cmd = new SqlCommand(SQL_GetAvailableSites, conn);
+        //            cmd.Parameters.AddWithValue("@campground_id", campsite.CampgroundId);
 
-                    SqlDataReader reader = cmd.ExecuteReader();
+        //            SqlDataReader reader = cmd.ExecuteReader();
 
-                    while (reader.Read())
-                    {
-                        if (!(startDate >= from_date && startDate <= to_date) || !(endDate >= from_date && endDate <= to_date))
-                        {
-                            availableSites.Add(PopulateSiteObject(reader));
-                        }
-                    }
+        //            while (reader.Read())
+        //            {
+        //                if (!(startDate >= from_date && startDate <= to_date) || !(endDate >= from_date && endDate <= to_date))
+        //                {
+        //                    availableSites.Add(PopulateSiteObject(reader));
+        //                }
+        //            }
 
-                }
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine(ex.Message);
-                throw;
-            }
-        }
+        //        }
+        //    }
+        //    catch (SqlException ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //        throw;
+        //    }
+        //}
 
         public Reservation PopulateReservationObject(SqlDataReader reader)
         {
