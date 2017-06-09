@@ -13,9 +13,11 @@ namespace Capstone.DAL
     {
         private string connectionString;
         private const string SQL_IsCampgroundOpen = @"SELECT * FROM campground WHERE campground_id = @campground_id";
-        private const string SQL_GetAvailableSites = @"SELECT * FROM reservation";
+        private const string SQL_GetAllReservations = @"SELECT * FROM reservation";
         private const string SQL_CreateReservation = @"INSERT INTO reservation (site_id, name, to_date, from_date, create_date) VALUES(@site_id, @name, @to_date, @from_date, @create_date)";
+        private const string SQL_GetTotalSites = @"SELECT site_id FROM site WHERE campground_id = @campground_id";
         List<Reservation> allReservations = new List<Reservation>();
+        List<int> numberOfSites = new List<int>();
 
         // Single Parameter Constructor
         public ReservationSqlDAL(string dbConnectionString)
@@ -54,8 +56,37 @@ namespace Capstone.DAL
             return false;
         }
 
+        public List<int> GetTotalSites(int campground_id)
+        {
+            int sum = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
 
-        public List<Reservation> GetAvailableSites()
+                    SqlCommand cmd = new SqlCommand(SQL_GetTotalSites, conn);
+                    cmd.Parameters.AddWithValue("@campground_id", campground_id);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        sum += 1;
+                        numberOfSites.Add(sum);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            return numberOfSites;
+        }
+
+
+        public List<Reservation> GetAllReservations()
         {
             try
             {
@@ -63,7 +94,7 @@ namespace Capstone.DAL
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand(SQL_GetAvailableSites, conn);
+                    SqlCommand cmd = new SqlCommand(SQL_GetAllReservations, conn);
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -82,16 +113,16 @@ namespace Capstone.DAL
         }
 
 
-        public bool IsReservationOpen(DateTime startDate, DateTime endDate)
+        public List<int> IsReservationOpen(DateTime startDate, DateTime endDate)
         {
             
             foreach(Reservation party in allReservations)
             {
-                if (startDate >= party.From_Date && startDate <= party.To_Date) return false;
-                if (endDate >= party.From_Date && endDate <= party.To_Date) return false;
-                if (startDate < party.From_Date && endDate > party.To_Date) return false;
+                if (startDate >= party.From_Date && startDate <= party.To_Date) numberOfSites.Remove(party.SiteId);
+                if (endDate >= party.From_Date && endDate <= party.To_Date) numberOfSites.Remove(party.SiteId);
+                if (startDate < party.From_Date && endDate > party.To_Date) numberOfSites.Remove(party.SiteId);
             }
-            return true;
+            return numberOfSites;
         }
 
 
@@ -109,9 +140,9 @@ namespace Capstone.DAL
                         SqlCommand cmd = new SqlCommand(SQL_CreateReservation, conn);
                         cmd.Parameters.AddWithValue("@site_id", newReservation.SiteId);
                         cmd.Parameters.AddWithValue("@name", newReservation.Name);
-                        cmd.Parameters.AddWithValue("from_date", newReservation.From_Date);
-                        cmd.Parameters.AddWithValue("to_date", newReservation.To_Date);
-                        cmd.Parameters.AddWithValue("create_date", DateTime.Now);
+                        cmd.Parameters.AddWithValue("@from_date", newReservation.From_Date);
+                        cmd.Parameters.AddWithValue("@to_date", newReservation.To_Date);
+                        cmd.Parameters.AddWithValue("@create_date", DateTime.Now);
 
                         int rowsAffected = cmd.ExecuteNonQuery();
                         return (rowsAffected > 0);
