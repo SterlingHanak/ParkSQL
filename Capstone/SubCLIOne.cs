@@ -91,6 +91,11 @@ namespace Capstone
 
         }
 
+        public void MakeReservation(DateTime startDate, DateTime endDate)
+        {
+
+        }
+
 
 
     }
