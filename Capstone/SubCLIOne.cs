@@ -102,6 +102,7 @@ namespace Capstone
                 {
                     if (numberOfSites.Contains(camp.SiteId))
                     {
+                        Console.WriteLine("Site ID: " + camp.SiteId);
                         Console.WriteLine("Site #" + camp.SiteNumber);
                         Console.WriteLine(" Max Occupancy: " + camp.MaxOccupancy);
                         Console.WriteLine(" Handicap Accessible: " + camp.yesOrNo(camp.Accessible));
@@ -111,19 +112,13 @@ namespace Capstone
                         Console.WriteLine();
                     }
                 }
-                if (availableSites.Count == 0)
-                {
-                    Console.WriteLine("No available sites for that time period");
-
-                }
             }
             else
             {
                 Console.WriteLine("The campground is not open during that period");
             }
 
-
-            Console.WriteLine("What site number do you choose?");
+            Console.WriteLine("Please enter the Site ID for your desired site:");
             int userSite = Convert.ToInt32(Console.ReadLine());
 
             if (numberOfSites.Contains(userSite))
@@ -132,6 +127,7 @@ namespace Capstone
             }
             else
             {
+                //This has to loop until correct.  Right now it displays the error then still goes to the next line.
                 Console.WriteLine("That was not a valid site number");
             }
 
