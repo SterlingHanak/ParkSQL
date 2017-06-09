@@ -83,6 +83,7 @@ namespace Capstone
             }
 
             Console.WriteLine("Your end date is " + endDate.ToShortDateString());
+            Console.WriteLine();
 
             IReservationDAL dal = new ReservationSqlDAL(databaseConnection);
             List<int> numberOfSites = dal.GetTotalSites(userCampground.CampgroundId);
@@ -98,6 +99,7 @@ namespace Capstone
                 ISiteDAL siteDAL = new SiteSqlDAL(databaseConnection);
                 List<Site> availableSites = siteDAL.GetAvailableSites(userCampground.CampgroundId);
 
+                Console.WriteLine("Available Camp Sites:");
                 foreach (Site camp in availableSites)
                 {
                     if (numberOfSites.Contains(camp.SiteId))
@@ -110,6 +112,10 @@ namespace Capstone
                         Console.WriteLine(" Utilities Available: " + camp.yesOrNo(camp.HasUtilities));
                         Console.WriteLine(" Total Fee: " + userCampground.DailyFee * Convert.ToInt32((endDate.Subtract(startDate)).TotalDays));
                         Console.WriteLine();
+                    }
+                    else if (numberOfSites.Count == 0)
+                    {
+                        Console.WriteLine("Sorry, no camp sites are available during that time.");
                     }
                 }
             }
