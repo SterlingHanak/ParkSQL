@@ -1,4 +1,5 @@
-﻿using Capstone.Models;
+﻿using Capstone.Interfaces;
+using Capstone.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Capstone.DAL
 {
-    class SiteSqlDAL
+    class SiteSqlDAL : ISiteDAL
     {
         private string connectionString;
         private string SQL_GetAllSites = @"SELECT TOP 5 * FROM site WHERE campground_id = @campground_id";
@@ -19,7 +20,7 @@ namespace Capstone.DAL
             connectionString = dbConnectionString;
         }
 
-        public List<Site> GetAvailableSites(int campground_id, DateTime to_date, DateTime from_date)
+        public List<Site> GetAvailableSites(int campground_id)
         {
             List<Site> AvailableSites = new List<Site>();
             try
@@ -29,6 +30,7 @@ namespace Capstone.DAL
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(SQL_GetAllSites, conn);
+                    cmd.Parameters.AddWithValue("@campground_id", campground_id);
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -38,9 +40,10 @@ namespace Capstone.DAL
                     }
                 }
             }
-            catch (SqlException)
+            catch (SqlException ex)
             {
-                throw new NotImplementedException();
+                Console.WriteLine(ex.Message);
+                throw;
             }
             return AvailableSites;
         }

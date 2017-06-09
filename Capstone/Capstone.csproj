@@ -52,6 +52,7 @@
     <Compile Include="Interfaces\ICampgroundDAL.cs" />
     <Compile Include="Interfaces\IParkDAL.cs" />
     <Compile Include="Interfaces\IReservationDAL.cs" />
+    <Compile Include="Interfaces\ISiteDAL.cs" />
     <Compile Include="Models\Campground.cs" />
     <Compile Include="Models\Park.cs" />
     <Compile Include="Models\Reservation.cs" />

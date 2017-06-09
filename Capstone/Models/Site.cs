@@ -20,7 +20,7 @@ namespace Capstone.Models
         {
             if (bitValue == 0) return "NO";
             if (bitValue == 1) return "YES";
-            return "UNKNOWN";
+            return "N/A";
         }
     }
 }

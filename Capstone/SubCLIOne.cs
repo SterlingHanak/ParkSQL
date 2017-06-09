@@ -87,11 +87,33 @@ namespace Capstone
 
             bool isOpen = dal.IsCampgroundOpen(userCampground, startDate, endDate);
 
-            Console.WriteLine(isOpen.ToString());
+            if (isOpen)
+            {
+                IReservationDAL reservation = new ReservationSqlDAL(databaseConnection);
+
+                ISiteDAL siteDAL = new SiteSqlDAL(databaseConnection);
+                List<Site> availableSites = siteDAL.GetAvailableSites(userCampground.CampgroundId);
+
+                foreach(Site camp in availableSites)
+                {
+                    Console.WriteLine("Site #" + camp.SiteNumber);
+                    Console.WriteLine(" Max Occupancy: " + camp.MaxOccupancy);
+                    Console.WriteLine(" Handicap Accessible: " + camp.yesOrNo(camp.Accessible));
+                    Console.WriteLine(" Max RV Length: " + camp.RvLength.ToString());
+                    Console.WriteLine(" Utilities Available: " + camp.yesOrNo(camp.HasUtilities));
+                    Console.WriteLine(" Fee: " + userCampground.DailyFee * Convert.ToInt32((endDate.Subtract(startDate)).TotalDays));
+                }
+            }
+            else
+            {
+                Console.WriteLine("The campground is not open during that period");
+            }
+
+
 
         }
 
-        public void MakeReservation(DateTime startDate, DateTime endDate)
+        public void MakeReservation(Campground userCampground, DateTime startDate, DateTime endDate)
         {
 
         }
