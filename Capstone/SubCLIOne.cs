@@ -61,9 +61,9 @@ namespace Capstone
 
             DateTime startDate = DateTime.MinValue;
 
-            while (startDate == DateTime.MinValue)
+            while (startDate < DateTime.Today)
             {
-                Console.WriteLine("What is your start date? (MM/DD/YYYY)");
+                Console.WriteLine("Please enter a valid start date (MM/DD/YYYY)");
                 Console.WriteLine();
                 string userStartDate = Console.ReadLine();
                 DateTime.TryParse(userStartDate, out startDate);
@@ -74,9 +74,9 @@ namespace Capstone
 
             DateTime endDate = DateTime.MinValue;
 
-            while (endDate == DateTime.MinValue)
+            while (endDate < startDate)
             {
-                Console.WriteLine("What is your end date? (MM/DD/YYYY)");
+                Console.WriteLine("Please enter a valid end date (MM/DD/YYYY)");
                 Console.WriteLine();
                 string userEndDate = Console.ReadLine();
                 DateTime.TryParse(userEndDate, out endDate);
@@ -110,7 +110,7 @@ namespace Capstone
                         Console.WriteLine(" Handicap Accessible: " + camp.yesOrNo(camp.Accessible));
                         Console.WriteLine(" Max RV Length: " + camp.RvLength.ToString());
                         Console.WriteLine(" Utilities Available: " + camp.yesOrNo(camp.HasUtilities));
-                        Console.WriteLine(" Total Fee: " + userCampground.DailyFee * Convert.ToInt32((endDate.Subtract(startDate)).TotalDays));
+                        Console.WriteLine(" Total Fee: " + (userCampground.DailyFee * Convert.ToInt32((endDate.Subtract(startDate)).TotalDays)).ToString("C2"));
                         Console.WriteLine();
                     }
                     else if (numberOfSites.Count == 0)
@@ -124,19 +124,27 @@ namespace Capstone
                 Console.WriteLine("The campground is not open during that period");
             }
 
-            Console.WriteLine("Please enter the Site ID for your desired site:");
-            int userSite = Convert.ToInt32(Console.ReadLine());
-
-            if (numberOfSites.Contains(userSite))
+            bool userInputId = false;
+            while (userInputId == false)
             {
-                userReservation.SiteId = userSite;
-            }
-            else
-            {
-                //This has to loop until correct.  Right now it displays the error then still goes to the next line.
-                Console.WriteLine("That was not a valid site number");
-            }
+                Console.WriteLine("Please enter the Site ID for your desired site:");
+                string response = Console.ReadLine();
+                int userSite = 0;
+                if (int.TryParse(response, out int result))
+                {
+                    userSite = int.Parse(response);
+                }
 
+                if (numberOfSites.Contains(userSite))
+                {
+                    userReservation.SiteId = userSite;
+                    userInputId = true;
+                }
+                else
+                {
+                    Console.WriteLine("That was not a valid site number");
+                }
+            }
             Console.WriteLine("What name would you like to book this reservation under? ");
             string userName = Console.ReadLine();
 
@@ -150,7 +158,6 @@ namespace Capstone
             {
                 Console.WriteLine("Your reservation has been successfully booked!");
                 Console.WriteLine("Your confirmation id is " + (allReservations.Count + 1));
-
             }
 
         }
