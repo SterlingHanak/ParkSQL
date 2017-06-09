@@ -49,7 +49,6 @@ namespace Capstone.DAL
         {
             return new Site()
             {
-                //How/Where do we establish the true/false value for each number in the booleans?
                 SiteId = Convert.ToInt32(reader["site_id"]),
                 CampgroundId = Convert.ToInt32(reader["campground_id"]),
                 SiteNumber = Convert.ToInt32(reader["site_number"]),

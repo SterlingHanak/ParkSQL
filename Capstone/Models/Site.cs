@@ -15,5 +15,12 @@ namespace Capstone.Models
         public byte Accessible { get; set; }
         public int RvLength { get; set; }
         public byte HasUtilities { get; set; }
+
+        public string yesOrNo (byte bitValue)
+        {
+            if (bitValue == 0) return "NO";
+            if (bitValue == 1) return "YES";
+            return "UNKNOWN";
+        }
     }
 }
