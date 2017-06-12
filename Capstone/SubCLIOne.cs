@@ -146,8 +146,10 @@ namespace Capstone
             bool reservationSuccess = dal.CreateReservation(userReservation);
             if (reservationSuccess)
             {
+                List<Reservation> updatedReservations = dal.GetAllReservations();
+                
                 Console.WriteLine("Your reservation has been successfully booked!");
-                Console.WriteLine("Your confirmation id is " + (allReservations.Count + 1));
+                Console.WriteLine("Your confirmation id is " + (updatedReservations.Count));
 
             }
 
