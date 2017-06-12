@@ -58,7 +58,6 @@ namespace Capstone.DAL
 
         public List<int> GetTotalSites(int campground_id)
         {
-            int sum = 0;
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -72,8 +71,7 @@ namespace Capstone.DAL
 
                     while (reader.Read())
                     {
-                        sum += 1;
-                        numberOfSites.Add(sum);
+                        numberOfSites.Add(Convert.ToInt32(reader["site_id"]));
                     }
                 }
             }
